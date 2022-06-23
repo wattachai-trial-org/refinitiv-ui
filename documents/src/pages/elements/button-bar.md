@@ -2,6 +2,7 @@
 type: page
 title: Button Bar
 location: ./elements/button-bar
+language_tabs: ["javascript","typescript"]
 layout: default
 -->
 
@@ -216,9 +217,9 @@ To listen to the tap event on the button, add the `tap` event listener to an ind
   <ef-button id="Like" icon="like-empty"></ef-button>
 </ef-button-bar>
 ```
-```javascript
+```typescript
 const buttonBar = document.getElementById('button-bar');
-buttonBar.addEventListener('tap', (e) => {
+buttonBar.addEventListener('tap', (e: TapEvent) => {
   console.log(e.target.getAttribute('id'));
 });
 ```

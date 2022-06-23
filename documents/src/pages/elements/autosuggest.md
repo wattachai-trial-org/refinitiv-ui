@@ -74,28 +74,16 @@ Implement the `suggestions-fetch-requested` event listener to construct suggesti
 
 In the listener function, assign suggestion data to the `suggestions` property to display it in the popup.
 
-```javascript
-// sample dataset to perform search and process output to show on autosuggest
-const data = [{ label: 'Cornelius Martin' },
+```typescript
+  const data = [{ label: 'Cornelius Martin' },
   { label: 'Memphis Hoover' },
   { label: 'Angela Lloyd' },
   { label: 'Emilee Gay' },
   { label: 'Selah Richardson' }];
 
-const autoSuggest = document.querySelector('ef-autosuggest');
-autoSuggest.addEventListener('suggestions-fetch-requested', (event) => {
-  // value from attached input control
-  const query = event.detail.query;
-
-  // handle the number of min characters and populate suggestions
-  if (query && query.length >= 1) {
-    autoSuggest.suggestions = data.filter((item) => item.label.indexOf(query) !== -1);
-  }
-  else {
-    autoSuggest.suggestions = [];
-  }
-});
+  const autoSuggest: any = document.querySelector('ef-autosuggest');
 ```
+
 ### Data property interface
 
 Autosuggest natively processes data using the [Suggestion](https://github.com/Refinitiv/refinitiv-ui/blob/develop/packages/elements/src/autosuggest/helpers/types.ts) type. For data not applying the `ef-item` model, see [Integrate custom suggestion data](./elements/autosuggest#integrate-with-custom-suggestion-data).

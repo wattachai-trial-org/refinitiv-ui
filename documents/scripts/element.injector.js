@@ -4,6 +4,8 @@ const fse = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const { Source, Build } = require('./paths');
+const ts = require('typescript');
+const beautify = require('js-beautify').js;
 
 const PACKAGE_ROOT = '../node_modules/@refinitiv-ui/elements/lib';
 const ELEMENT_API_FILENAME = 'custom-elements.md';
@@ -29,14 +31,24 @@ const handler = async () => {
       const elementContent = fs.readFileSync(elementPage).toString();
       const apiContent = fs.readFileSync(entrypoint).toString();
       const footerTitleIndex = elementContent.indexOf(FOOTER_TITLE);
-
+      const typescriptBlocks = new RegExp('```typescript([^\0]*?)```', 'gm');
       let content = '';
+      let founded;
+
+      while ((founded = typescriptBlocks.exec(elementContent)) !== null) {
+        content += elementContent.substr(0, typescriptBlocks.lastIndex);
+        const jsText = ts.transpileModule(founded[1], { compilerOptions: { esModuleInterop: true, noImplicitAny: true,  module: 'ESNext', target: 'ES2017' } }).outputText;
+        const finalText = beautify(jsText, { indent_size: 2, space_in_empty_paren: true })
+        content += '\n```javascript\n';
+        content += finalText;
+        content += '\n```\n';
+      }
 
       if(footerTitleIndex !== -1) {
         content += elementContent.substr(0, footerTitleIndex);
       }
       else {
-        content += elementContent;
+        content += elementContent.substr(typescriptBlocks.lastIndex, elementContent.lastIndex);
       }
       
       content += apiStyleSheetLink;
