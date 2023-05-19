@@ -1,6 +1,6 @@
 # TODO: Sor has removed jobs to test Sonarcloud. Pls revert they back after finish.
 name: Test
-on: [pull_request] # Triggers on any branch
+on: [push] # Triggers on any branch
 env:
   NX_BASE: ${{ github.event.pull_request.base.sha }}
   BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
