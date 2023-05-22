@@ -1,3 +1,4 @@
+# TODO: Sor has removed jobs to test Sonarcloud. Pls revert they back after finish.
 name: 'Run Test'
 description: 'Setup Browser and Run Test'
 inputs:
@@ -10,11 +11,11 @@ inputs:
   mode:
     description: 'Run test in all packages or only affected packages'
     required: false
-    default: 'affected' # affected|all
+    default: 'all' # affected|all
   target:
     description: 'Run test on the package/element'
     required: false
-    default: ''
+    default: 'all'
   coverage:
     description: 'Include test coverage'
     required: false
@@ -40,7 +41,7 @@ runs:
       # Prevent NX caching for mode `all` because it must run all testing, even though the code has not changed.
       run: |
         [[ "${{ inputs.mode }}" == "all" ]] && export NX_SKIP_NX_CACHE=true && unset NX_BASE
-        npm run test:${{ inputs.mode }} -- --browserstack ${{ inputs.browsers }} --includeCoverage=${{ inputs.coverage }} --output=minimal --parallel=${{ inputs.parallel }}
+        npm run test:${{ inputs.mode }} --  --includeCoverage=${{ inputs.coverage }} --output=minimal --parallel=${{ inputs.parallel }}
 
     - name: Test Package or Element
       if: ${{ inputs.target != '' && inputs.target != 'all' }}
