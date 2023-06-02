@@ -71,6 +71,3 @@ jobs:
         with:
           browsers: ${{ env.BROWSERS }}
           mode: 'all'
-          browserstack: $USE_BROWSERSTACK
-          username: $BROWSERSTACK_USERNAME
-          access-key: $BROWSERSTACK_ACCESS_KEY
