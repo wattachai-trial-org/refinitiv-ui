@@ -78,7 +78,7 @@ runs:
       run: |
         [[ "${{ inputs.mode }}" == "affected" ]] && export OPTIONS="--base=${{ inputs.base }}"
         [[ "${{ inputs.mode }}" == "all" ]] && export OPTIONS="--skip-nx-cache"
-        npm run test:${{ inputs.mode }} -- $OPTIONS --parallel=${{ inputs.parallel }} ${{ env.BROWSERS_OPTION }} --includeCoverage ${{ inputs.coverage }} --output minimal
+        npm run test:${{ inputs.mode }} -- $OPTIONS --verbose --parallel=${{ inputs.parallel }} ${{ env.BROWSERS_OPTION }} --includeCoverage ${{ inputs.coverage }}
 
     - name: Test Package or Element
       if: ${{ inputs.target != '' }}
