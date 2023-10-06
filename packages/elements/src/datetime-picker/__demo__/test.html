@@ -50,27 +50,53 @@
     </script>
     <demo-block header="Custom Slots" tags="slot">
       <style type="text/css">
-        .test {
-          background-color: red;
+        .bg {
+          background-color: lightsalmon;
+          width: 100%;
+          height: 100%;
+        }
+
+        .bg2 {
+          background-color: lightgreen;
           width: 100%;
           height: 100%;
         }
       </style>
 
-      <ef-datetime-picker id="default-range" range duplex="split" timepicker>
-        <div slot="calendar-from-2023-10-10" class="test">🐞</div>
-        <div slot="calendar-to-2023-11-09" class="test">🐞</div>
-      </ef-datetime-picker>
+      <ef-datetime-picker id="default-range" range duplex="split" timepicker> </ef-datetime-picker>
       <script type="module">
         const el = document.getElementById('default-range');
-        el.addEventListener('before-cell-render', (event) => {
-          const newSlot = document.createElement('div');
-          if (event.detail.cell.value === '2023-11-10') {
-            newSlot.slot = 'calendar-to-2023-11-10';
-            newSlot.classList.add('test');
-            newSlot.innerText = '🐛';
-            el.append(newSlot);
+
+        const appendSlot = (el, node) => {
+          const div = document.createElement('div');
+          div.innerHTML = el.innerHTML;
+          div.append(node);
+          el.innerHTML = div.innerHTML;
+        };
+
+        const createSlot = (el, event, target, text, css) => {
+          if (event.detail.calendar === target.calendar && event.detail.cell.value === target.date) {
+            const newSlot = document.createElement('div');
+            newSlot.slot = `${target.calendar === 'calendar' ? 'calendar-from' : target.calendar}-${
+              target.date
+            }`;
+            newSlot.classList.add(css);
+            newSlot.innerText = text;
+            appendSlot(el, newSlot);
           }
+        };
+
+        el.addEventListener('before-cell-render', (event) => {
+          console.log(event.detail.calendar, event.detail.cell);
+
+          createSlot(el, event, { calendar: 'calendar', date: '2023-10-10' }, '🐛', 'bg');
+          createSlot(el, event, { calendar: 'calendar-to', date: '2023-11-11' }, '🕷️', 'bg');
+
+          let i = 12;
+          setInterval(() => {
+            createSlot(el, event, { calendar: 'calendar-to', date: '2023-11-' + i }, '🐞', 'bg2');
+            i++;
+          }, 3000);
         });
       </script>
     </demo-block>

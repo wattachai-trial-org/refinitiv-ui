@@ -41,7 +41,7 @@ import { VERSION } from '../version.js';
 import { getDateFNSLocale } from './locales.js';
 import { DateTimeSegment, formatToView, getCurrentTime } from './utils.js';
 
-import type { Calendar } from '../calendar';
+import type { BeforeCellRenderEvent, Calendar, CalendarCell } from '../calendar';
 import type { OpenedChangedEvent, ValueChangedEvent, ViewChangedEvent } from '../events';
 import type { Icon } from '../icon';
 import type { Overlay } from '../overlay';
@@ -50,6 +50,11 @@ import type { TimePicker } from '../time-picker';
 import type { DatetimePickerDuplex, DatetimePickerFilter } from './types';
 
 export type { DatetimePickerFilter, DatetimePickerDuplex };
+
+type CalendarCellRenderEvent = CustomEvent<{
+  calendar: string;
+  cell: CalendarCell;
+}>;
 
 const POPUP_POSITION = ['bottom-start', 'top-start', 'bottom-end', 'top-end', 'bottom-middle', 'top-middle'];
 
@@ -1191,6 +1196,8 @@ export class DatetimePicker extends ControlElement implements MultiValue {
    * @returns template result
    */
   private getCalendarTemplate(id: 'calendar' | 'calendar-to', view = ''): TemplateResult {
+    // eslint-disable-next-line no-console
+    console.log('Call Get Template', id);
     const slotContent = this.createCalendarSlots(id);
     return html`<ef-calendar
       part="calendar"
@@ -1216,8 +1223,21 @@ export class DatetimePicker extends ControlElement implements MultiValue {
     </ef-calendar>`;
   }
 
-  protected onCellRender(event: CustomEvent): void {
-    // console.log(event);
+  protected onSlotChange(event: Event): void {
+    this.requestUpdate();
+  }
+
+  protected onCellRender(event: BeforeCellRenderEvent): void {
+    event.stopPropagation();
+    const dateTimePickerEvent: CalendarCellRenderEvent = new CustomEvent('before-cell-render', {
+      cancelable: false,
+      composed: true, // allow calendar customization within other elements e.g. datetime picker
+      detail: {
+        cell: event.detail.cell,
+        calendar: (event?.target as HTMLElement)?.id ?? 'calendar'
+      }
+    });
+    this.dispatchEvent(dateTimePickerEvent);
   }
 
   /**
@@ -1323,6 +1343,7 @@ export class DatetimePicker extends ControlElement implements MultiValue {
             <div><slot name="right"></div>
           </div>
           <div><slot name="footer"></div>
+          <slot @slotchange=${this.onSlotChange} hidden></slot>
         </ef-overlay>`;
     }
   }
