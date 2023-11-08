@@ -24,6 +24,14 @@ export const defaultFilter = <T extends DataItem = ItemData>(el: ComboBox<T>): C
       query = el.query ?? '';
       queryRegExp = new RegExp(escapeStringRegexp(query), 'i');
     }
+
+
+    const queryRegExp2 = new RegExp(query.replace(/(\W)/g, '\\$1'), 'i');
+    if (queryRegExp2) {
+      // eslint-disable-next-line no-console
+      console.log('Test Error');
+    }
+
     return queryRegExp;
   };
 
