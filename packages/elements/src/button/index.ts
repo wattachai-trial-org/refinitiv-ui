@@ -44,13 +44,13 @@ export class Button extends ControlElement {
    * Specify icon to display in button. Value can be icon name
    */
   @property({ type: String, reflect: true })
-  public icon: string | null = '';
+  public icon: string | null = null;
 
   /**
    * Specify icon to display when hovering. Value can be icon name
    */
   @property({ type: String, reflect: true, attribute: 'hover-icon' })
-  public hoverIcon: string | null = '';
+  public hoverIcon: string | null = null;
 
   /**
    * Set call-to-action state
@@ -73,7 +73,7 @@ export class Button extends ControlElement {
   /**
    * Use by theme to detect when no content inside button
    */
-  private empty = false;
+  private void = false;
 
   /**
    * Get native label element from shadow roots
@@ -160,7 +160,7 @@ export class Button extends ControlElement {
    * @returns {void}
    */
   private emptyComputed(): void {
-    this.empty = this.textContent ? this.textContent.length === 0 : true;
+    this.void = this.textContent ? this.textContent.length === 0 : true;
     this.switchEmptyAttribute();
   }
 
@@ -169,7 +169,7 @@ export class Button extends ControlElement {
    * @returns {void}
    */
   private switchEmptyAttribute(): void {
-    if (this.empty) {
+    if (this.void) {
       this.setAttribute('empty', '');
     } else {
       this.removeAttribute('empty');
