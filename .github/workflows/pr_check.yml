@@ -3,6 +3,7 @@ on: [pull_request] # Triggers on any branch
 env:
   CI: 'true'
   NX_BASE: ${{ github.event.pull_request.base.sha }}
+  BROWSERSTACK_LATEST_BROWSERS_LAUNCHER: 'Playwright'
 
 jobs:
   build:
