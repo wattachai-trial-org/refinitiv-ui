@@ -44,13 +44,13 @@ export class Button extends ControlElement {
    * Specify icon to display in button. Value can be icon name
    */
   @property({ type: String, reflect: true })
-  public icon: string | null = null;
+  public icon: string | null = '';
 
   /**
    * Specify icon to display when hovering. Value can be icon name
    */
   @property({ type: String, reflect: true, attribute: 'hover-icon' })
-  public hoverIcon: string | null = null;
+  public hoverIcon: string | null = '';
 
   /**
    * Set call-to-action state
