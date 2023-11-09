@@ -73,7 +73,7 @@ export class Button extends ControlElement {
   /**
    * Use by theme to detect when no content inside button
    */
-  private void = false;
+  private empty = false;
 
   /**
    * Get native label element from shadow roots
@@ -160,7 +160,7 @@ export class Button extends ControlElement {
    * @returns {void}
    */
   private emptyComputed(): void {
-    this.void = this.textContent ? this.textContent.length === 0 : true;
+    this.empty = this.textContent ? this.textContent.length === 0 : true;
     this.switchEmptyAttribute();
   }
 
@@ -169,7 +169,7 @@ export class Button extends ControlElement {
    * @returns {void}
    */
   private switchEmptyAttribute(): void {
-    if (this.void) {
+    if (this.empty) {
       this.setAttribute('empty', '');
     } else {
       this.removeAttribute('empty');
