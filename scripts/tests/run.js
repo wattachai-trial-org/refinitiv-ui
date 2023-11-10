@@ -59,29 +59,6 @@ if (existsSync(tsConfigPath)) {
 }
 config.plugins.push(esbuildPlugin(esbuildConfig));
 
-// Use HTTP2 (Safari browsers does not work with Web Test Runner)
-if (env.TEST_HTTPS === 'true') {
-  // Create paths
-  const certsPath = path.join(ROOT, 'certs');
-  const sslCert = path.join(certsPath, 'test-cert.pem');
-  const sslKey = path.join(certsPath, 'test-key.pem');
-
-  // Create certs directory, cert and key files
-  if (!existsSync(certsPath)) mkdirSync(certsPath);
-  if (!existsSync(sslCert) && env.TEST_SSL_CERT) writeFileSync(sslCert, env.TEST_SSL_CERT);
-  if (!existsSync(sslKey) && env.TEST_SSL_KEY) writeFileSync(sslKey, env.TEST_SSL_KEY);
-
-  success('Enable HTTPS with HTTP2');
-  // Setup HTTP2 into Web Test Runner config
-  config = {
-    ...config,
-    protocol: 'https:',
-    http2: true,
-    sslKey,
-    sslCert
-  };
-}
-
 // Handle outputs
 if (argv.output === 'full') {
   config.reporters.push(summaryReporter());

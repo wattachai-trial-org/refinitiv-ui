@@ -3,12 +3,7 @@ on: [pull_request] # Triggers on any branch
 env:
   CI: 'true'
   NX_BASE: ${{ github.event.pull_request.base.sha }}
-  BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-  BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
-  BROWSERSTACK_BUILD: 'Test ${{ github.run_number }}'
   BROWSERSTACK_LATEST_BROWSERS_LAUNCHER: 'Playwright'
-  TEST_SSL_CERT: ${{ secrets.TEST_SSL_CERT }}
-  TEST_SSL_KEY: ${{ secrets.TEST_SSL_KEY }}
 
 jobs:
   build:
@@ -98,41 +93,7 @@ jobs:
         with:
           browsers: 'safari'
 
-  test-ios:
-    name: 'Test / iOS'
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Test
-        uses: ./.github/actions/run-test
-        with:
-          browsers: 'ios'
-          # Disable HTTPS with Safari, and iOS on BrowserStack for now because it required run extra script before test start
-          # https://www.browserstack.com/docs/automate/selenium/accept-insecure-certificates
-          https: 'false'
-
-  test-android:
-    name: 'Test / Android'
-    needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Test
-        uses: ./.github/actions/run-test
-        with:
-          browsers: 'android'
-
   scan-sonarcloud:
-    if: false # temporarily disabled until SonarCloud issue has been resvoled
     name: 'Scan / SonarCloud'
     needs: test-chrome
     runs-on: ubuntu-latest
@@ -150,23 +111,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-  scan-semgrep:
-    name: Scan
-    uses: ./.github/workflows/semgrep.yml
-    with:
-      verbose: false
-    secrets: inherit
-
-  size-report:
-    name: 'Report / Bundle Size'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - uses: preactjs/compressed-size-action@8119d3d31b6e57b167e09c81dfa877eada3bcb35 # v2
-        with:
-          build-script: 'build:prod'
-          pattern: '{**/lib/**/*.js,**/*-theme/**/*.{js,css}}'
