@@ -5,8 +5,7 @@ on:
 env:
   CI: 'true'
   BROWSERSTACK_LATEST_BROWSERS_LAUNCHER: 'Playwright'
-  TEST_SSL_CERT: ${{ secrets.TEST_SSL_CERT }}
-  TEST_SSL_KEY: ${{ secrets.TEST_SSL_KEY }}
+
 jobs:
   build:
     name: 'Build'
@@ -50,7 +49,6 @@ jobs:
           mode: 'all'
 
   sonarcloud:
-    if: false # temporarily disabled until SonarCloud issue has been resvoled
     name: 'Scan / SonarCloud'
     needs: test-chrome
     runs-on: ubuntu-latest
