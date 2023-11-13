@@ -59,7 +59,7 @@ const getActiveElement = (deep = false): Element | null => {
  * @param [first=true] Set to false to delegate to last tabbable element
  * @returns {void}
  */
-const executeFocusDelegation = (element: BasicElement, first = true): void => {
+const delegateFocus = (element: BasicElement, first = true): void => {
   const tabbableElements = element.tabbableElements;
 
   const delegateFocusElement = tabbableElements[first ? 0 : tabbableElements.length - 1];
@@ -191,7 +191,7 @@ const updateFocusedState = (): void => {
  */
 const onFocus = (event: FocusEvent): void => {
   const target = event.target as HTMLElement | null;
-  shouldDelegateOnFocus(target) && executeFocusDelegation(target as BasicElement);
+  shouldDelegateOnFocus(target) && delegateFocus(target as BasicElement);
   updateFocusedState();
 };
 
@@ -220,7 +220,7 @@ const onShadowRootBlur = function (this: ShadowRoot): void {
     requestAnimationFrame(() => {
       /* frame is required, as immediately after blur, activeElement is body */
       if (getActiveElement(true) === element) {
-        executeFocusDelegation(element);
+        delegateFocus(element);
       }
 
       updateFocusedState();
