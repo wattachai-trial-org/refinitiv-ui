@@ -97,8 +97,11 @@ jobs:
     name: 'Scan / SonarCloud'
     needs: test-chrome
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
+
     steps:
+      - name: Dependabot check
+        if: github.actor != 'dependabot[bot]'
+        run: exit 1 # exit as error so the scan could be re-run by human overcoming limited permission of action initaiated by Dependabot
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
