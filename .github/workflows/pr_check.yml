@@ -97,6 +97,7 @@ jobs:
     name: 'Scan / SonarCloud'
     needs: test-chrome
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
