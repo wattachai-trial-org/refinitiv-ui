@@ -13,6 +13,7 @@ jobs:
         run: |
           echo "actor is ${{github.actor}}"
           echo "triggering_actor is ${{github.triggering_actor}}"
+          echo "test secret is ${{secrets.TEST_SECRET}}"
 
   build:
     name: Build
@@ -108,7 +109,7 @@ jobs:
 
     steps:
       - name: Dependabot check
-        if: github.actor == 'dependabot[bot]'
+        if: github.triggering_actor == 'dependabot[bot]'
         run: |
           echo "Terminating this Action with exit code 1 as it's been initiated by Dependabot."
           echo "Re-run this Action to overcome its limited permission."
