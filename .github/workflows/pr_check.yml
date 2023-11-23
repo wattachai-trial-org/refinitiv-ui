@@ -6,6 +6,14 @@ env:
   BROWSERSTACK_LATEST_BROWSERS_LAUNCHER: 'Playwright'
 
 jobs:
+  show-actor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: print
+        run: |
+          echo "actor is ${{github.actor}}"
+          echo "triggering_actor is ${{github.triggering_actor}}"
+
   build:
     name: Build
     runs-on: ubuntu-latest
