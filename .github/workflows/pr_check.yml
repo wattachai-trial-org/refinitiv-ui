@@ -100,8 +100,12 @@ jobs:
 
     steps:
       - name: Dependabot check
-        if: github.actor != 'dependabot[bot]'
-        run: exit 1 # exit as error so the scan could be re-run by human overcoming limited permission of action initaiated by Dependabot
+        if: github.actor == 'dependabot[bot]'
+        run: |
+          echo "Terminating this Action with exit code 1 as it's been initiated by Dependabot."
+          echo "Re-run this Action to overcome its limited permission."
+          echo "For more info, check https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions."
+          exit 1
       - name: Check out repository code
         uses: actions/checkout@v3
         with:
